@@ -1,0 +1,78 @@
+<%
+# encoding: utf-8
+#--
+#   Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++
+%>
+
+<%= breadcrumbs_from(@message) -%>
+
+<h1><%= h(@message.subject) %></h1>
+<%- @message.messages_in_thread.each do |message| -%>
+  <div class="<%= message.aasm_state -%> <%= message.css_class -%> message_full" id="<%= dom_id(message) -%>">
+    <div class="avatar">
+      <%= sender_avatar message -%>
+    </div>
+    <div class="message">
+      <% unless message.subject == @message.subject -%>
+        <h2 class="subject"><%=h message.subject -%></h2>
+      <% end -%>
+      <p class="meta">
+        <%= message_title(message) %> <%= distance_of_time_in_words_to_now(message.created_at) %> ago
+      </p>
+      <p class="body">
+        <%= simple_format h(message.body) %>
+      </p>
+      <ul class="message_actions">
+        <% if message.unread? and message.recipient == current_user %>
+          <li id="<%= dom_id(message, 'mark_as_read') -%>">
+              <a class="mark_as_unread" href="<%= read_message_path(message) -%>">
+                <%= t('views.messages.mark_as_read') -%>
+              </a>
+          </li>
+        <% end %>
+
+        <%- if (message.sender != current_user) and message.replies_enabled? -%>
+          <li>
+            <%= link_to_function(t("views.messages.reply"), "$('##{dom_id(message,"reply_to")}').toggle()") %>
+          </li>    
+        <%- end -%>
+      </ul>
+        <% if (message.sender != current_user) and message.replies_enabled? -%>
+          <div class="reply" style="display:none" id="<%= dom_id(message,"reply_to") %>">
+            <% form_for(message.build_reply, :url => reply_message_path(message)) do |f| %>
+              <p>
+                <%= f.label :subject, t("views.messages.subject") %><br/>
+                <%= f.text_field :subject %>
+              </p>
+              <p>
+                <%= f.label :subject, t("views.messages.body") %><br/>
+                <%= f.text_area :body %>
+              </p>
+
+              <p>
+                <%= f.submit t("views.messages.submit") %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+    </div>
+  </div> 
+<%- end -%>
+
+<%- content_for(:sidebar) do -%>
+  <%= render :partial => "sidebar" %>
+<%- end -%>

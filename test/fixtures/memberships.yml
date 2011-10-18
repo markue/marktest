@@ -1,0 +1,9 @@
+team_thunderbird_mike:
+  group: team_thunderbird
+  user_id: 3
+#  user: mike
+  role: admin
+a_team_owner:
+  group: a_team
+  user_id: 1
+  role: admin

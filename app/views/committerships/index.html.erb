@@ -1,0 +1,123 @@
+<%
+#--
+#   Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies)
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++
+%>
+
+<%= breadcrumbs_from(@root) -%>
+
+<h1>
+  <%= t("views.collaborators.title",
+        :repo_name => link_to(h(@repository.name), [@owner, @repository]))  -%>
+</h1>
+
+<table class="listing">
+	<thead>
+		<th><%= t(:created_at, :scope => "activerecord.attributes.committerships").humanize %></th>
+		<th><%= t(:committer_type, :scope => "activerecord.attributes.committerships").humanize %></th>
+		<th><%= t(:committer, :scope => "activerecord.attributes.committerships").humanize %></th>
+    <th><%= t(:permissions, :scope => "activerecord.attributes.committerships").humanize %></th>
+		<th><%= t(:creator, :scope => "activerecord.attributes.committerships").humanize %></th>
+		<th></th>
+	</thead>
+	<% @committerships.each do |committership| -%>
+	<tr class="<%= cycle('even', 'odd') -%>">
+	  <td><%= committership.created_at.to_s(:short) -%></td>
+	  <td><%= committership.committer.class.human_name -%></td>
+	  <td><%= link_to h(committership.committer.title), committership.committer -%></td>
+    <td><%=h committership.permission_list.join(', ') -%></td>
+	  <td><%= link_to(h(committership.creator.login), committership.creator) if committership.creator -%>
+	  <td class="committer-buttons">
+      <%= button_to(t("views.common.edit"),
+            [:edit, @owner, @repository, committership], :method => :get) -%>
+      <%= button_to(t("views.common.remove"),
+            [@owner, @repository, committership], :method => :delete) -%>
+    </td>
+	</tr>
+	<% end -%>
+</table>
+
+<%= will_paginate @committerships -%>
+
+<%= render "permission_explanation" %>
+
+<% content_for :sidebar do -%>
+  <ul class="links actions navigation">
+    <li>
+      <%= link_to t("views.collaborators.add_new"),
+            [:new, @owner, @containing_project, @repository, :committership] -%>
+    </li>
+  </ul>
+
+  <h4>Permission overview:</h4>
+
+  <ul class="committers">
+	  <h5>Reviewers</h5>
+  <% @repository.reviewers.each do |user| -%>
+    <li>
+      <div class="user">
+        <%= avatar_from_email(user.email, :size => 16, :style => "tiny") %>
+        <%= link_to h(user.title), user -%>
+        <% if @repository.user == user -%>
+          <small class="hint">(<%= t("views.repos.creator") %>)</small>
+        <% end -%>
+      </div>
+    </li>
+  <% end -%>
+  <% if @repository.reviewers.blank? -%>
+    <li><em>No users with review permissions</em></li>
+  <% end %>
+  </ul>
+
+
+  <ul class="committers">
+	  <h5>Committers</h5>
+  <% @repository.committers.each do |user| -%>
+    <li>
+      <div class="user">
+        <%= avatar_from_email(user.email, :size => 16, :style => "tiny") %>
+        <%= link_to h(user.title), user -%>
+        <% if @repository.user == user -%>
+          <small class="hint">(<%= t("views.repos.creator") %>)</small>
+        <% end -%>
+      </div>
+    </li>
+  <% end -%>
+  <% if @repository.committers.blank? -%>
+    <li><em>No users with commit permissions</em></li>
+  <% end %>
+  </ul>
+
+
+  <ul class="committers">
+	  <h5>Administrators</h5>
+  <% @repository.administrators.each do |user| -%>
+    <li>
+      <div class="user">
+        <%= avatar_from_email(user.email, :size => 16, :style => "tiny") %>
+        <%= link_to h(user.title), user -%>
+        <% if @repository.user == user -%>
+          <small class="hint">(<%= t("views.repos.creator") %>)</small>
+        <% end -%>
+      </div>
+    </li>
+  <% end -%>
+  <% if @repository.administrators.blank? -%>
+    <li><em>No users with administer permissions</em></li>
+  <% end %>
+  </ul>
+
+<% end -%>

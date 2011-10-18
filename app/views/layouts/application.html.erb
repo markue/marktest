@@ -1,0 +1,81 @@
+<%
+#--
+#   Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies)
+#   Copyright (C) 2007, 2008 Johan Sørensen <johan@johansorensen.com>
+#   Copyright (C) 2008 August Lilleaas <augustlilleaas@gmail.com>
+#   Copyright (C) 2008 Tor Arne Vestbø <tavestbo@trolltech.com>
+#   Copyright (C) 2009 Fabio Akita <fabio.akita@gmail.com>
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <%= render :partial => "layouts/common_head" %>
+</head>
+<body id="<%= controller.controller_name -%>">
+  <div id="wrapper">
+    <% unless GitoriousConfig["system_message"].blank? -%>
+      <div id="system_message">
+        <p><strong><%= t("views.layout.system_notice") %>:</strong> <%= GitoriousConfig["system_message"] -%></p>
+      </div>
+    <% end -%>
+    <ul id="user-nav">
+      <li><%= link_to("Dashboard", root_path) %></li>
+      <%= render "layouts/login_logout" -%>
+    </ul>
+    <div id="header">
+      <h1 id="logo">
+        <%= logo_link %>
+      </h1>
+      <ul id="menu">
+        <% if GitoriousConfig['public_mode'] || logged_in? -%>
+          <li class="activity"><%= link_to "Activities", activity_path -%></li>
+          <li class="projects"><%= link_to t("views.layout.projects"), projects_path -%></li>
+          <li class="teams"><%= link_to t("views.layout.teams"), groups_path -%></li>
+        <% end -%>
+      </ul>
+    </div>
+    <div id="top-bar">
+      <ul id="breadcrumbs">
+        <%= yield :breadcrumbs -%>
+      </ul>
+      <% if GitoriousConfig['public_mode'] || logged_in? -%>
+        <div id="searchbox">
+          <%= render :partial => "/searches/search_box_global", :locals => {:hide_tips => true} -%>
+        </div>
+      <% end -%>
+    </div>
+    <div id="container" class="<%= @content_for_submenu.blank? ? "" : "in-context-mode" -%>">
+      <div id="content" class="<%= sidebar_content? ? "with_sidebar" : "" -%>">
+        <%= flashes %>
+        <%= yield -%>
+      </div>
+      <% if sidebar_content? -%>
+        <div id="sidebar">
+          <%= yield :sidebar -%>
+        </div>
+      <% end -%>
+    </div>
+    <div id="footer">
+      <%= render :partial => "layouts/common_footer" -%>
+      <%= render :partial => "layouts/footer_links" -%>
+      <%= render :partial => "layouts/footer_blurb" %>
+      <div class="clear"></div>
+    </div>
+  </div>
+</body>
+</html>

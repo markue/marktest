@@ -1,0 +1,53 @@
+<%
+#--
+#   Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies)
+#   Copyright (C) 2008 Johan Sørensen <johan@johansorensen.com>
+#   Copyright (C) 2008 David A. Cuadrado <krawek@gmail.com>
+#   Copyright (C) 2008 Tor Arne Vestbø <tavestbo@trolltech.com>
+#   Copyright (C) 2008 Simon Hausmann <simon.hausmann@nokia.com>
+#   Copyright (C) 2009 Fabio Akita <fabio.akita@gmail.com>
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++
+%>
+
+<% @page_title = t("views.commits.page_title",
+                   :repo => @repository.name,
+                   :title => @project.title) -%>
+<%= breadcrumbs_from(@root) -%>
+
+<div id="commit-diffs" data-gts-source="<%= h(@diffs_url) %>?fragment=1">
+  <h1>Commit <%=h params[:id] %></h1>
+  <p>
+    <strong>NB!</strong> This page relies heavily on JavaScript, enable it for
+    a better view.
+  </p>
+  <ul>
+    <li><%= link_to "Diffs", :controller => :commit_diffs, :action => :index %></li>
+    <li><%= link_to "Comments", :controller => :commit_comments, :action => :index %></li>
+  </ul>
+</div>
+
+<div data-gts-source="<%= h(@comments_url) %>">
+  <h2 id="comments">Comments</h2>
+</div>
+
+<%= render :partial => "comments/form", :locals => {:sha1 => @commit.id} -%>
+<%= render(:partial => "comments/inline_comment_form", :locals => {
+             :commentable_type => "commit",
+             :comment => :comment,
+             :url => new_polymorphic_comment_path(nil, Comment.new),
+             :sha1 => @commit.id,
+             :include_favorite_checkbox => false
+           }) -%>

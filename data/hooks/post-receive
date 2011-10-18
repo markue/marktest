@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+#--
+#   Copyright (C) 2008 Johan Sørensen <johan@johansorensen.com>
+#   Copyright (C) 2009 Marius Mårnes Mathiesen <marius.mathiesen@gmail.com>
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#++
+print "=> Syncing Gitorious... "
+
+incpath = File.dirname(__FILE__)
+$: << incpath
+
+require 'messaging'
+
+@publisher = Publisher.new
+gitdir = File.expand_path(File.join(incpath, ".."))
+
+# Equivalent to the hash in the model
+hashed_dir = gitdir.split('/')[-3,3].join('/').split('.').first
+
+# compat with the old-style paths
+hashed_dir = hashed_dir.sub(/^repositories\//, "")
+
+while line = gets
+  @publisher.post_message({:gitdir => hashed_dir, :message => line.chomp, :username => ENV['GITORIOUS_USER']})
+end
+
+puts "[OK]"
