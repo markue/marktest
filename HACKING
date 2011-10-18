@@ -10,24 +10,6 @@ Ruby libraries/bindings/gems
 * textpow (http://rubyforge.org/projects/textpow)
 * chronic (http://rubyforge.org/projects/chronic)
 * rmagick (http://rubyforge.org/projects/rmagick)
-
-Libraries/applications:
-
-* Git (http://git-scm.org)
-* Oniguruma C library (http://www.geocities.jp/kosako3/oniguruma/)
-* Sphinx (http://sphinxsearch.com/)
-
-(App is deployed on mysql, allthough source should be free of mysql-isms/quirks)
-
-
-=== The Hackers digest guide:
-
-1. Do the normal rails app stuff (database.yml etc.)
-
-2. Rename the config/gitorious.sample.yml file to gitorious.yml, and update it with your changes.
-
-3a. If you want real project data, find a project, set the 'ready' status to true, create a bare git repository (git --bare init) in the directory GitoriousConfig['repository_base_path']/#{project.slug}/#{repository.name}.git, and push something to that repository (cd to a git repository with commits and do "git push path/to/the/bare/repository/you/just/created master").
-
 3b. OR run the script/task_performer and let it create the repository for you (remember to do step 2 first)
 
 4. Get your git on!
@@ -63,4 +45,6 @@ by #gitorious on irc.freenode.net if you have questions.
 * Follow the conventions you see used in the source already
 
 (copied mostly verbatim from dev.rubyonrails.org)
+
+3a. If you want real project data, find a project, set the 'ready' status to true, create a bare git repository (git --bare init) in the directory GitoriousConfig['repository_base_path']/#{project.slug}/#{repository.name}.git, and push something to that repository (cd to a git repository with commits and do "git push path/to/the/bare/repository/you/just/created master").
 
