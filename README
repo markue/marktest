@@ -18,7 +18,13 @@ Also see the files in the doc/ folder, they contain further detailed information
 about setting up the application for specific linux distributions such as 
 CentOS and Ubuntu/Debian
 
-
+dergvstrh sedarhg deshrsrehrsth
+srgth
+sfrth
+fg
+hsdrhsdrhgzd
+fbh
+xdfghn
 Installation to a production environment -- a partial walkthrough.
 ==================================================================
 
@@ -49,6 +55,16 @@ into encoding issues, and possibly other problems. Gitorious.org has reverted
 its Ruby 1.9 setup to Ruby Enterprise Edition, which is the Ruby version we
 recommend. If you don't want to run REE, we recommend stock 1.8.7.
 
+ergtesrgsrg
+zsg
+sGre
+sreg
+awsertgeartgs
+Edefg
+SFG
+zsd
+rtawergsDGb
+
 Dependencies
 ============
 
@@ -60,7 +76,7 @@ First, install each of these Libraries/applications:
 * ImageMagick           (need version >= 6.3.0)
 * aspell (optional)
 
-An ActiveMessaging (http://code.google.com/p/activemessaging/wiki/Installation) compatible queue
+reszargtyse6ytusrtjhszdfhSFBAn ActiveMessaging (http://code.google.com/p/activemessaging/wiki/Installation) compatible queue
 server. Gitorious.org runs ActiveMQ and STOMP, stompserver might be a nice
 flyweight alternative for your needs
 
